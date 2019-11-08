@@ -295,6 +295,31 @@ class CarParkController extends Controller
     }
 
     /**
+     * Get all car parks created by a park admin
+     *
+     */
+    public function theParksByAdmin(CarPark $park)
+    {
+        // Get the intended resource
+        $car_park = $this->user->parks()->get();
+
+        if ($car_park->isNotEmpty()) {
+            // Output car park details
+            return response()->json([
+                'count'   => $car_park->count(),
+                'status'  => true,
+                'result'  => $car_park
+            ], 200);
+        }
+        else {
+            return response()->json([
+                'status'  => false,
+                'message' => 'There are no active car parks'
+            ], 404);
+        }
+    }
+
+    /**
      * Get all in-active car parks
      *
      */

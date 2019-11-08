@@ -60,6 +60,7 @@ Route::group(['prefix' => 'park', 'middleware' => 'isuser'], function () {
         Route::delete('{id}', 'CarParkController@delete');
         Route::get('booking/current/{park_id}', 'CarParkBookingController@carParkCurrent');
         Route::get('booking/history/{park_id}', 'CarParkBookingController@carParkHistory');
+        Route::get('my-parks', 'CarParkController@theParksByAdmin');
     });
     
     Route::get('booking/my-history', 'CarParkBookingController@carParkHistory');
