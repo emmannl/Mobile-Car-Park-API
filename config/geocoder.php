@@ -32,7 +32,7 @@ return [
     /*
      * The country param used to limit results to a specific country.
      *
-     * More info: https://developers.google.com/maps/documentation/javascript/geocoding#GeocodingRequests
+     * More info:
      */
     'country' => '',
 
