@@ -80,6 +80,7 @@ class CarParkController extends Controller
             $image_data = [
                 'image_round_format' => $data['image_round_format'],
                 'image_square_format' => $data['image_square_format'],
+                'image_link' => $data['image_link']
             ];
 
             $park_details = [
@@ -115,7 +116,8 @@ class CarParkController extends Controller
     public function update(
         $id,
         CarPark $update,
-        Request $request
+        Request $request,
+        ImageController $image
     ){
         // Get the car park if the admin user is assigned to it
         $update = $this->user->parks()->find($id);
@@ -147,20 +149,37 @@ class CarParkController extends Controller
                     return response()->json($data, $data['status_code']);
                 }
                 else {
-                    $park->image_link = $data['image'];
+                    $update->image_name = $data['image'];
+                    $update->image_link = $data['image_link'];
                 }
             }
             else {
                 $data = null;
-                $park->image_link = $update->image_link;
+                $data['image_link'] = $update->image_link;
             }
 
             // Save to db
             if ($update->save()) {
+                // Prepare JSON response
+                $image_data = [
+                    'image_link' => $data['image_link']
+                ];
+
+                $park_details = [
+                    'park_id' => $update->id,
+                    'name' => $update->name,
+                    'owner' => $update->owner,
+                    'address' => $update->address,
+                    'phone' => $update->phone,
+                    'fee' => $update->fee,
+                    'user_id' => $update->user_id,
+                ];
+
+                $result_set = array_merge($park_details, $image_data);
+
                 return response()->json([
                     'status'  => true,
-                    'result'  => $update,
-                    'image_info' => $data,
+                    'result'  => $result_set,
                     'message' => 'The record was successfully updated'
                 ], 200);
             }
