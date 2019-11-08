@@ -16,16 +16,26 @@ Route::prefix('auth')->namespace('Auth')->group(function () {
 
 Route::prefix('user')->middleware('auth')->group( function () {
     Route::get('/', 'UserProfileController@show');
-    Route::patch('/', 'UserProfileController@update');
+    Route::put('/', 'UserProfileController@update');
+    Route::patch('/settings', 'UserProfileController@manageProfile');
 });
 
 Route::prefix('vehicles')->middleware('auth')->group( function () {
     Route::get('/', 'VehiclesController@index');
     Route::post('/', 'VehiclesController@store');
-    Route::patch('{id}', 'VehiclesController@update');
+    Route::put('{id}', 'VehiclesController@update');
     Route::delete('{id}', 'VehiclesController@delete');
 });
 
-Route::prefix('park')->group(function () {
-	Route::post('/', 'CarParkController@store');
+Route::group(['prefix' => 'park', 'middleware' => 'auth'], function () {
+	Route::get('/', 'CarParkController@apiIndex');
+    Route::get('all', 'CarParkController@index');
+    Route::get('{id}', 'CarParkController@show');
+
+    Route::group(['middleware' => 'admin'], function () {
+        Route::get('active', 'CarParkController@showActive');
+        Route::get('inactive', 'CarParkController@showInActive');
+    	Route::post('/', 'CarParkController@store');
+    	Route::patch('{id}', 'CarParkController@update');
+    });
 });

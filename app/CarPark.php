@@ -15,7 +15,7 @@ class CarPark extends Model
     	'name',
     	'owner',
     	'address',
-    	'tel',
+    	'phone',
     	'fee',
     	'image_link',
     	'status'

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "91f9c2304a47067f27a5eb66b59b9fda",
+    "content-hash": "2c678c6f5e5a4ada52b9e0e3ad06f9ee",
     "packages": [
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -2274,66 +2274,6 @@
                 "uuid"
             ],
             "time": "2018-07-19T23:38:55+00:00"
-        },
-        {
-            "name": "spatie/geocoder",
-            "version": "3.6.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/spatie/geocoder.git",
-                "reference": "f97e93a08634baed1e4a32134874b9465f2b0983"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/spatie/geocoder/zipball/f97e93a08634baed1e4a32134874b9465f2b0983",
-                "reference": "f97e93a08634baed1e4a32134874b9465f2b0983",
-                "shasum": ""
-            },
-            "require": {
-                "guzzlehttp/guzzle": "~6.0",
-                "illuminate/support": "^5.0|^6.0",
-                "php": "^7.2"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^8.0",
-                "vlucas/phpdotenv": "^3.0"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Spatie\\Geocoder\\GeocoderServiceProvider"
-                    ],
-                    "aliases": {
-                        "Geocoder": "Spatie\\Geocoder\\Facades\\Geocoder"
-                    }
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Spatie\\Geocoder\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Freek Van der Herten",
-                    "email": "freek@spatie.be"
-                }
-            ],
-            "description": "Geocoding addresses to coordinates",
-            "homepage": "https://github.com/spatie/geocoder",
-            "keywords": [
-                "coordinate",
-                "geocode",
-                "laravel",
-                "location",
-                "map"
-            ],
-            "time": "2019-09-04T21:30:39+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",
