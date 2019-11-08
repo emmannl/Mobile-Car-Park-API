@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use Str;
 use Exception;
 use App\CarPark;
 use App\User;
