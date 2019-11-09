@@ -50,7 +50,7 @@ Route::group(['prefix' => 'park', 'middleware' => 'isuser'], function () {
 
     Route::group(['middleware' => 'admin'], function () {
         Route::post('/', 'CarParkController@store');
-        Route::put('{id}', 'CarParkController@update');
+        Route::post('{id}', 'CarParkController@update');
         Route::get('users/{park_id}', 'CarParkBookingController@getUsers');
         Route::get('bookings/{park_id}', 'CarParkBookingController@carParksBooking');
         Route::delete('revoke-booking/{booking_id}', 'CarParkBookingController@revoke');
