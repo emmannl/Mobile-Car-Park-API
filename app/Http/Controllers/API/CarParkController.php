@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers\API;
 
-use Exeception;
+use Exception;
+use Geocoder;
 use App\CarPark;
 use App\User;
 use App\Classes\Helper;
@@ -47,6 +48,19 @@ class CarParkController extends Controller
             'phone'       => ['bail', 'required', 'string', 'min:11', 'phone:NG'],
             'fee'         => ['bail', 'required', 'between:0,99.99', 'min:0'],
         ]);
+
+//        $client = new \GuzzleHttp\Client();
+//
+//        $geocoder = new Geocoder($client);
+//
+//        $geocoder->setApiKey(config('geocoder.key'));
+//
+//        $geocoder->setCountry(config('NG'));
+
+        $location = Geocoder::getCoordinatesForAddress($request->address);
+
+
+        $park = new CarPark;
 
         $park->name       = $request->name;
         $park->owner      = $request->owner;
@@ -96,6 +110,14 @@ class CarParkController extends Controller
             $result_set = array_merge($park_details, $image_data);
             return response()->json([
                 'status'  => true,
+                'result'  => [
+                    'park' => $park,
+                    'location' => [
+                        'lat' => $location['lat'],
+                        'lng' => $location['lng'],
+                    ]
+                ],
+                'message' => 'Car Park was successfully added',
                 'result'  => $result_set,
                 'message' => 'The parking space was successfully added'
             ], 200);
@@ -345,7 +367,7 @@ class CarParkController extends Controller
     public function showSuperInActive()
     {
         // Get the intended resource
-        $car_park = CarPark::whereStatus(0)->get();    
+        $car_park = CarPark::whereStatus(0)->get();
 
         if ($car_park->isNotEmpty()) {
             // Output car park details
