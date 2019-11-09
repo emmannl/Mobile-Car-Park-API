@@ -27,6 +27,7 @@ Route::prefix('auth')->namespace('Auth')->group(function () {
 Route::prefix('user')->middleware('auth')->group( function () {
     Route::get('/', 'UserProfileController@show');
     Route::put('/', 'UserProfileController@update');
+    Route::put('/password', 'UserProfileController@updatePassword');
     Route::patch('/settings', 'UserProfileController@manageProfile');
     Route::post('/picture', 'UserProfileController@editImage');
 });
