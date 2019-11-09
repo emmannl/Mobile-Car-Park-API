@@ -28,6 +28,7 @@ Route::prefix('user')->middleware('auth')->group( function () {
     Route::get('/', 'UserProfileController@show');
     Route::put('/', 'UserProfileController@update');
     Route::patch('/settings', 'UserProfileController@manageProfile');
+    Route::post('/picture', 'UserProfileController@editImage');
 });
 
 Route::prefix('vehicles')->middleware('auth')->group( function () {
