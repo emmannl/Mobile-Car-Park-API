@@ -116,6 +116,7 @@ class RegisterController
     private function createUser(array $data, $role = 'user')
     {
         $data['role'] = $role;
+        $data['avatar_url'] = "https://res.cloudinary.com/dfqzmig0c/image/upload/v1573299366/default.png";
 
         return User::create($data);
     }

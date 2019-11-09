@@ -8,6 +8,7 @@ use App\Classes\Helper;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Cloudder;
 
 class UserProfileController
 {
@@ -60,5 +61,26 @@ class UserProfileController
         $this->user->settings()->updateOrCreate($data);
 
         return response()->json(['message' => 'Settings Updated', 'data' => $data]);
+    }
+
+    public function editImage(Request $request)
+    {
+        if (!$request->hasFile('picture')) {
+            return response()->json(['message' => 'The picture is missing from the request'], 400);
+        }
+
+//        if ($result)
+
+        $name = "car-app/avatar_{$this->user->id}";
+        Cloudder::upload($request->file('picture'), $name);
+        $result = Cloudder::getResult();
+
+        $this->user->update(['avatar_url' => $result['secure_url']]);
+
+        return response()->json([
+            'data' => [
+                'avatar_url' => $result['secure_url'],
+            ],
+        ]);
     }
 }

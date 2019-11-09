@@ -28,6 +28,7 @@ Route::prefix('user')->middleware('auth')->group( function () {
     Route::get('/', 'UserProfileController@show');
     Route::put('/', 'UserProfileController@update');
     Route::patch('/settings', 'UserProfileController@manageProfile');
+    Route::post('/picture', 'UserProfileController@editImage');
 });
 
 Route::prefix('vehicles')->middleware('auth')->group( function () {
@@ -46,7 +47,7 @@ Route::group(['prefix' => 'park', 'middleware' => 'isuser'], function () {
         Route::get('bookings/history', 'CarParkBookingController@superHistory');
         Route::get('bookings/{park_id}', 'CarParkBookingController@showSuperSingleBooking');
     });
-    
+
     Route::group(['middleware' => 'admin'], function () {
         Route::post('/', 'CarParkController@store');
         Route::post('{id}', 'CarParkController@update');
@@ -62,7 +63,7 @@ Route::group(['prefix' => 'park', 'middleware' => 'isuser'], function () {
         Route::get('booking/history/{park_id}', 'CarParkBookingController@carParkHistory');
         Route::get('my-parks', 'CarParkController@theParksByAdmin');
     });
-    
+
     Route::get('booking/my-history', 'CarParkBookingController@carParkHistory');
     Route::get('booking/my-current', 'CarParkBookingController@carParkCurrent');
     Route::post('book/{park_id}', 'CarParkBookingController');
@@ -80,4 +81,8 @@ Route::group(['prefix' => 'park', 'middleware' => 'isuser'], function () {
 Route::prefix('users')->middleware('admin')->group(function () {
     Route::get('/', 'AdminUsersController@index');
     Route::get('{user_id}', 'AdminUsersController@show');
+});
+
+Route::prefix('statistics')->namespace('Statistics')->group(function () {
+    Route::get('admin-overview', 'SuperAdminOverviewController')->middleware('superAdmin');
 });
