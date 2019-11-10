@@ -33,6 +33,7 @@ class NotificationsController
         });
 
         $res["data"] = $notifications;
+        $res['count'] = $notifications->count();
 
         return response()->json($res);
 
