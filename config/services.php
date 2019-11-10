@@ -39,4 +39,8 @@ return [
         'kep' => env('SMARTSMS_KEY'),
     ],
 
+    'fcm' => [
+        'key' => env('FCM_SECRET_KEY')
+    ],
+
 ];

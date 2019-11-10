@@ -24,6 +24,18 @@ class EventServiceProvider extends ServiceProvider
         Login::class => [
             \App\Listeners\UpdateLastLogin::class,
         ],
+
+        \App\Events\BookingConfirmed::class => [
+          \App\Listeners\SendBookingConfidedNotification::class,
+        ],
+
+        \App\Events\PaymentVerified::class => [
+            \App\Listeners\SendPaymentCompletionNotification::class
+        ],
+
+        \App\Events\ParkingSpaceBookingAboutExpriing::class => [
+            \App\Listeners\SendBookingAboutExpiringNotification::class,
+        ]
     ];
 
     /**
