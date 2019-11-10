@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Events\BookingConfirmed;
 use Str;
 use Exception;
 use App\CarPark;
@@ -95,6 +96,8 @@ class CarParkBookingController extends Controller
                     'parking_space_image_link'=> $parking_space->image_link,
                     'parking_space_status'    => $parking_space->status == 1 ? "activated" : "deactivated",
                 ];
+
+                event(new BookingConfirmed($this->user, $booking));
 
 	            // Send response
 	            return response()->json([
@@ -201,7 +204,7 @@ class CarParkBookingController extends Controller
     //     $bookings = CarPark::whereUserId($user_id)
     //     	->join('car_park_bookings', 'car_park_bookings.car_park_id', 'car_parks.id')
     //     	->get('car_park_bookings.*');
-        
+
     //     // Send response
     //     return response()->json([
     //         'status' => true,

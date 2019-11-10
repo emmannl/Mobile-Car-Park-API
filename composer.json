@@ -11,6 +11,7 @@
         "php": "^7.2",
         "ext-json": "*",
         "barryvdh/laravel-cors": "^0.11.4",
+        "benwilkins/laravel-fcm-notification": "^4.0",
         "doctrine/dbal": "^2.9",
         "emmannl/smart-sms": "dev-master",
         "facebook/graph-sdk": "^5.7",
