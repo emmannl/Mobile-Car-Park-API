@@ -44,7 +44,9 @@ class UserProfileController
             }), 'phone:NG', Rule::unique('users')->ignore($this->user->id)],
             'first_name' => ['required', 'string', 'min:3', 'max:255'],
             'last_name' => ['required', 'string', 'min:3', 'max:255'],
-            'email' => ['nullable', 'email', 'max:255', Rule::unique('users')->ignore($this->user->id)],
+            'email' => [Rule::requiredIf(function () {
+                return $this->user->role != 'user';
+            }), 'email', 'max:255', Rule::unique('users')->ignore($this->user->id)],
         ]);
 
         try {
