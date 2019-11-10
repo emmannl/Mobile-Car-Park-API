@@ -1,4 +1,5 @@
-const getUsersSlots = () => {
+
+const getUsers = () => {
     const url = "https://hng-car-park-api.herokuapp.com/api/v1/users";
     let name = document.getElementById('name');
     let em = document.getElementById('em');
@@ -6,7 +7,7 @@ const getUsersSlots = () => {
     let ll = document.getElementById('ll');
     makeGetRequest(url).then(data => {
         const userData = data.data;
-        console.log(userData)
+
         for(let i = 0; i < userData.length; i++) {
             name.innerHTML += '<p>' + userData[i].first_name + ' ' + userData[i].last_name + '</p>' + '<br>';
             em.innerHTML += '<p>' + userData[i].email + '</p>' + '<br>';
@@ -25,7 +26,6 @@ const makeGetRequest = (url) => {
         headers: authHeaders(),
     }).then(response => {
         if (response.ok){
-            Swal.fire("List of Users updated);
             return response.json()
         } else {
             Swal.fire('User List Update failed');
