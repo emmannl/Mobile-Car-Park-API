@@ -12,6 +12,12 @@ const updateAccount = () => {
         email: email,
     };
     makePutRequest(url, data)
+        .then(response => {
+            handleResponse(response, 'Account');
+        })
+        .catch(error => {
+            handleError(error);
+        })
 };
 
 
@@ -20,40 +26,22 @@ const makePutRequest = (url, data) => {
     axios.defaults.headers.post['Content-Type'] = 'application/json';
     axios.defaults.headers.post['Accept'] = 'application/json';
 
-    axios.put(url, data)
-        .then( () => {
-            toastr.success( `Account Updated`);
-        })
-        .catch(error => {
-           let response  = error.response.data;
-           let msg = '';
-
-            if (error.response.status == '422' || response.hasOwnProperty('errors')) {
-                $.each(error.response.data.errors, function (index, item) {
-                    msg += `<li> ${item[0]} </li>`;
-                });
-            } else {
-                msg = error.response.data.message || error.toString();
-            }
-            toastr.error( `<p style="font-size:17px;">${msg}</p>`);
-
-        });
-    /*
-    return fetch(url, {
-        method: "PUT",
-        headers: authHeaders(),
-        body: JSON.stringify(data)
-    }).then(response => {
-        if (response.ok){
-            Swal.fire('Account Updated');
-            return response.json()
-        } else {
-            Swal.fire('Account Update failed')
-        }
-    }).catch(error => {
-        Swal.fire("Error occurred");
-    })*/
+    return axios.put(url, data);
 };
+
+let handleError = error => {
+    let response  = error.response.data;
+    let msg = '';
+
+    if (error.response.status == '422' || response.hasOwnProperty('errors')) {
+        $.each(error.response.data.errors, function (index, item) {
+            msg += `<li> ${item[0]} </li>`;
+        });
+    } else {
+        msg = error.response.data.message || error.toString();
+    }
+    toastr.error( `<p style="font-size:17px;">${msg}</p>`);
+}
 
 
 const authHeaders = () => {
@@ -70,6 +58,12 @@ const changePassword = () => {
     passwordPutRequest();
 };
 
+let handleResponse = (response, text) => {
+    toastr.success( `${text} Updated`);
+    if (text === 'Account') {
+        localStorage.setItem('user', JSON.stringify(response.data.data.user));
+    }
+};
 
 const passwordPutRequest = () => {
     const url = routes.changePassword();
@@ -98,6 +92,10 @@ const passwordPutRequest = () => {
             new_password_confirmation: new_password_confirmation
         };
 
-        makePutRequest(url, pass);
+        makePutRequest(url, pass).then( response => {
+            handleResponse(response, 'Password');
+        }).catch(error => {
+            handleError(error);
+        })
     })
 }

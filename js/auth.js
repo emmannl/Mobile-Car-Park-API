@@ -1,4 +1,5 @@
 let accesstoken = loa=localStorage.getItem('token');
+let userInfo = localStorage.getItem('user');
 if (!accesstoken) {
     location.replace('/admin/index.html');
 }
@@ -12,9 +13,16 @@ let request = new Request(routes.user(), {
     }),
 });
 fetch(request)
+    .then(response => response.json())
+    .then(response => {
+        userInfo =  response.data;
+        //update details, incase of changes
+        localStorage.setItem('user', JSON.stringify(userInfo));
+    })
 .catch(error => {
     // redirect to login
     return window.location.replace(`/admin/index.html`);
 });
 
 const bearerToken = accesstoken;
+const userData = JSON.parse(userInfo);

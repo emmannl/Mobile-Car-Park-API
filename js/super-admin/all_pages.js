@@ -18,3 +18,7 @@ let html =
     `;
 
 document.getElementById('myPopup').innerHTML = html;
+
+let userName = document.querySelector('.main h1');
+userName.innerHTML = `Welcome back ${userData.first_name}`;
+document.querySelector('#navbarSupportedContent p > span.text-muted').innerHTML = `${userData.first_name} ${userData.last_name}`;
