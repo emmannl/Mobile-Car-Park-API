@@ -1,38 +1,47 @@
 const updateAccount = () => {
-
-    const url = "https://hng-car-park-api.herokuapp.com/api/v1/user";
+    toastr.options.preventDuplicates = true;
+    toastr.options.timeOut = 0;
+    const url = routes.user();
 
     const fname = document.forms['settings_account']['fname'].value;
     const lname = document.forms['settings_account']['lname'].value;
     const email = document.forms['settings_account']['email'].value;
-    const phone = ' 08066668888';
     const data = {
         first_name: fname,
         last_name: lname,
         email: email,
-        phone: phone
     };
     makePutRequest(url, data)
+        .then(response => {
+            handleResponse(response, 'Account');
+        })
+        .catch(error => {
+            handleError(error);
+        })
 };
 
 
 const makePutRequest = (url, data) => {
+    axios.defaults.headers.common['Authorization'] = bearerToken;
+    axios.defaults.headers.post['Content-Type'] = 'application/json';
+    axios.defaults.headers.post['Accept'] = 'application/json';
 
-    return fetch(url, {
-        method: "PUT",
-        headers: authHeaders(),
-        body: JSON.stringify(data)
-    }).then(response => {
-        if (response.ok){
-            swal.fire('Account Updated");
-            return response.json()
-        } else {
-            swal.fire('Account Update failed")
-        }
-    }).catch(error => {
-        swal.fire("Error occurred");
-    })
+    return axios.put(url, data);
 };
+
+let handleError = error => {
+    let response  = error.response.data;
+    let msg = '';
+
+    if (error.response.status == '422' || response.hasOwnProperty('errors')) {
+        $.each(error.response.data.errors, function (index, item) {
+            msg += `<li> ${item[0]} </li>`;
+        });
+    } else {
+        msg = error.response.data.message || error.toString();
+    }
+    toastr.error( `<p style="font-size:17px;">${msg}</p>`);
+}
 
 
 const authHeaders = () => {
@@ -40,7 +49,8 @@ const authHeaders = () => {
 
     return {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
+        'Accept': 'application/json',
+        'Authorization': token
     }
 };
 
@@ -48,15 +58,21 @@ const changePassword = () => {
     passwordPutRequest();
 };
 
+let handleResponse = (response, text) => {
+    toastr.success( `${text} Updated`);
+    if (text === 'Account') {
+        localStorage.setItem('user', JSON.stringify(response.data.data.user));
+    }
+};
 
 const passwordPutRequest = () => {
-    const url = "https://hng-car-park-api.herokuapp.com/api/v1/user/password";
+    const url = routes.changePassword();
     const { value: data } = Swal.fire({
         title: 'Change Password',
         html:
-            '<input id="old_password" class="swal2-input" placeholder="Old Password">' +
-            '<input id="new_password" class="swal2-input" placeholder="New Password">' +
-            '<input id="new_password_confirmation" class="swal2-input" placeholder="Confirm New password">',
+            '<input id="old_password" type="password" class="swal2-input" placeholder="Old Password">' +
+            '<input id="new_password" type="password" class="swal2-input" placeholder="New Password">' +
+            '<input id="new_password_confirmation" type="password" class="swal2-input" placeholder="Confirm New password">',
         focusConfirm: false,
         preConfirm: () => {
             return [
@@ -76,6 +92,10 @@ const passwordPutRequest = () => {
             new_password_confirmation: new_password_confirmation
         };
 
-        makePutRequest(url, pass);
+        makePutRequest(url, pass).then( response => {
+            handleResponse(response, 'Password');
+        }).catch(error => {
+            handleError(error);
+        })
     })
 }
