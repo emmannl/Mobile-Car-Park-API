@@ -30,6 +30,7 @@ Route::prefix('user')->middleware('auth')->group( function () {
     Route::put('/password', 'UserProfileController@updatePassword');
     Route::patch('/settings', 'UserProfileController@manageProfile');
     Route::post('/picture', 'UserProfileController@editImage');
+    Route::get('notifications', 'NotificationsController@index');
 });
 
 Route::prefix('vehicles')->middleware('auth')->group( function () {
