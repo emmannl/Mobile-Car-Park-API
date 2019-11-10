@@ -13,6 +13,7 @@
     <script src="/js/routes.js"></script>
     <script src="/js/auth.js"></script>
     <script src="/js/load_vendors.js"></script>
+    <script src="/js/super-admin/all_pages.js" defer></script>
     <script type="text/javascript" src="../js/super-admin/settings_account.js"></script>
     <style>
         #body-row {
@@ -523,6 +524,10 @@
         var popup = document.getElementById("myPopup");
         popup.classList.toggle("display");
     }
+
+    document.forms['settings_account']['fname'].value = userData.first_name;
+    document.forms['settings_account']['lname'].value = userData.last_name;
+    document.forms['settings_account']['email'].value =userData.email;
 
 </script>
 </body>
