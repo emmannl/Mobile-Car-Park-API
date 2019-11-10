@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\API;
 
+use App\User;
 use Exception;
 use Geocoder;
 use App\CarPark;
-use App\User;
+use GuzzleHttp\Client;
 use App\Classes\Helper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -42,23 +43,14 @@ class CarParkController extends Controller
     ){
         // Validate posted data
         $this->validate($request, [
-            'name'        => ['bail', 'required', 'regex:/^([a-zA-Z]+)(\s[a-zA-Z]+)*$/'],
+            'name'        => ['bail', 'required', 'string'],
             'owner'       => ['bail', 'required', 'string',],
             'address'     => ['bail', 'required', 'string',],
             'phone'       => ['bail', 'required', 'string', 'min:11', 'phone:NG'],
             'fee'         => ['bail', 'required', 'between:0,99.99', 'min:0'],
         ]);
 
-//        $client = new \GuzzleHttp\Client();
-//
-//        $geocoder = new Geocoder($client);
-//
-//        $geocoder->setApiKey(config('geocoder.key'));
-//
-//        $geocoder->setCountry(config('NG'));
-
         $location = Geocoder::getCoordinatesForAddress($request->address);
-
 
         $park = new CarPark;
 
@@ -69,6 +61,8 @@ class CarParkController extends Controller
         $park->fee        = $request->fee;
         $park->user_id    = $this->user->id;
         $park->status     = 1;
+        $park->lat        = $location['lat'];
+        $park->long       = $location['lng'];
 
         // Upload image
         if ($request->hasFile('image')) {
@@ -97,29 +91,17 @@ class CarParkController extends Controller
                 'image_link' => $data['image_link']
             ];
 
-            $park_details = [
-                'park_id' => $park->id,
-                'name' => $park->name,
-                'owner' => $park->owner,
-                'address' => $park->address,
-                'phone' => $park->phone,
-                'fee' => $park->fee,
-                'user_id' => $park->user_id,
-            ];
-
-            $result_set = array_merge($park_details, $image_data);
             return response()->json([
                 'status'  => true,
                 'result'  => [
+                    'image' => $image_data,
                     'park' => $park,
                     'location' => [
                         'lat' => $location['lat'],
                         'lng' => $location['lng'],
                     ]
                 ],
-                'message' => 'Car Park was successfully added',
-                'result'  => $result_set,
-                'message' => 'The parking space was successfully added'
+                'message' => 'The Car Park was successfully added'
             ], 200);
         }
         else {
@@ -148,9 +130,9 @@ class CarParkController extends Controller
         if (!is_null($update)) {
             // Validate posted data
             $this->validate($request, [
-                'name'        => ['regex:/^([a-zA-Z]+)(\s[a-zA-Z]+)*$/'],
+                'name'        => ['string'],
                 'owner'       => ['string',],
-                'address'     => ['string',],
+                'address'     => ['required', 'string',],
                 'phone'       => ['string', 'min:11', 'phone:NG'],
                 'fee'         => ['integer', 'min:0'],
                 'status'      => ['integer'],
@@ -158,10 +140,22 @@ class CarParkController extends Controller
 
             $update->name       = $request->name ?? $update->name;
             $update->owner      = $request->owner ?? $update->owner;
+            
+            if (!is_null($request->address) || $request->address != $update->address) {
+                $location = Geocoder::getCoordinatesForAddress($request->address);
+            }
+            else {
+                $location['lat'] = $update->lat;
+                $location['lat'] = $update->long;
+            }
+
             $update->address    = $request->address ?? $update->address;
             $update->phone      = $request->phone ?? $update->phone;
             $update->fee        = $request->fee ?? $update->fee;
             $update->status     = $request->status ?? $update->status;
+
+            $update->lat        = $location['lat'];
+            $update->long       = $location['lng'];
 
             // Upload image
             if ($request->hasFile('image')) {
@@ -187,22 +181,13 @@ class CarParkController extends Controller
                     'image_link' => $data['image_link']
                 ];
 
-                $park_details = [
-                    'park_id' => $update->id,
-                    'name' => $update->name,
-                    'owner' => $update->owner,
-                    'address' => $update->address,
-                    'phone' => $update->phone,
-                    'fee' => $update->fee,
-                    'user_id' => $update->user_id,
-                ];
-
-                $result_set = array_merge($park_details, $image_data);
-
                 return response()->json([
                     'status'  => true,
-                    'result'  => $result_set,
-                    'message' => 'The record was successfully updated'
+                    'result'  => [
+                        'image' => $image_data,
+                        'park' => $update,
+                    ],
+                    'message' => 'The Car Park was successfully added'
                 ], 200);
             }
             else {
