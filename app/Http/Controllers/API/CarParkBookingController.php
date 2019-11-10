@@ -181,6 +181,12 @@ class CarParkBookingController extends Controller
 		        }
     		}
     	}
+    	else {
+	        return response()->json([
+	            'status'  => false,
+	            'message' => 'This booking id does not exist for the user',
+	        ], 400);
+    	}
     }
 
     /**
@@ -337,7 +343,16 @@ class CarParkBookingController extends Controller
 
         // Get the intended resource
         if (!is_null($park_id)) {
-            $bookings =  $this->user->parks()->find($park_id)->bookings()->where('check_out', '>=', $current_time)->get();
+            $bookings =  $this->user->parks()->find($park_id);
+            if (is_null($bookings)) {
+	            return response()->json([
+	                'status'  => false,
+	                'message' => 'The car park do not exist for the admin user'
+	            ], 200);
+            }
+            else {
+	            $bookings = $bookings->bookings()->where('check_out', '>=', $current_time)->get();
+            }
         }
         else {
             $bookings = $this->user->bookings()->where('check_out', '>=', $current_time)->get();
