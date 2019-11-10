@@ -5,7 +5,7 @@ return [
     /*
      * The api key used when sending Geocoding requests to Google.
      */
-    'key' => env('GOOGLE_MAPS_GEOCODING_API_KEY', ''),
+    'key' => env('GOOGLE_MAPS_GEOCODING_API_KEY', 'PUT_YOUR_GOOGLE_API_KEY_HERE'),
 
     /*
      * The language param used to set response translations for textual data.
@@ -13,7 +13,7 @@ return [
      * More info: https://developers.google.com/maps/faq#languagesupport
      */
 
-    'language' => '',
+    'language' => 'en',
 
     /*
      * The region param used to finetune the geocoding process.
@@ -34,6 +34,6 @@ return [
      *
      * More info:
      */
-    'country' => '',
+    'country' => 'ng',
 
 ];
