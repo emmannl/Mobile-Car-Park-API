@@ -19,6 +19,10 @@ class Routes {
         return `${this._origin}/user`;
     }
 
+    allUsers() {
+        return `${this._origin}/users`;
+    }
+
     overviewStats() {
         return `${this._origin}/statistics/admin-overview`;
     }
